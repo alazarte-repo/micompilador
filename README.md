@@ -17,6 +17,6 @@ Cumplir con la primer entrega del TP para el <b>Lunes 17-09-2018</b><br>
 <strike>Se añadio los comentarios</strike><br>
 <strike>Se valido la longitud de nombre de variables.</strike><br>
 <strike>Se implemento la declaracion multiple "cant, cont, x : int"</strike><br>
-<b>Se resolvio la carga de tipos en la elaboracion de la misma para las estructuras de declaracion multiple ya que no las carga.</b><br>
+<b><strike>Se resolvio la carga de tipos en la elaboracion de la misma para las estructuras de declaracion multiple ya que no las carga.</b></strike>S<br>
 
 <strike>-Temas Especiales- Implementar la asignacion multiple y la funcion AVG (promedio)</strike><br>
