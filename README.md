@@ -7,6 +7,7 @@ Cumplir con la primer entrega del TP para el <b>Lunes 17-09-2018</b><br>
 <b>Validar tipos de datos, es decir que ambos sean int o float. Tambien que chequee que una variable int no pueda ser seteada con un string, lo mismo con un float.</b><br>
 <b>Poder declarar variables sin problemas realizando previamente un chequeo de palabras reservadas</b><br>
 <b>Implementar la funcion WRITE y READ</b><br>
+<b>Verificar que sólo las variables declaradas pueden ser utilizadas en el desarrollo</b><br>
 
 <h2>Tareas Hechas</h2>
 <strike>Crear y dumpear a un archivo la tabla de símbolos</strike><br>
