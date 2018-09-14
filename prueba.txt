@@ -1,0 +1,10 @@
+-/Test de comentario/-
+DEFVAR
+a1er : float
+a4tryt : float
+ENDDEF
+
+if(a1er>a4tryt)
+{
+a4tryt:=a4tryt+a4tryt/a4tryt+7
+}
