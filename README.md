@@ -4,10 +4,7 @@ Cumplir con la primer entrega del TP para el <b>Lunes 17-09-2018</b><br>
 
 
 <h2>Tareas Pendientes</h2>
-<b>Validar tipos de datos, es decir que ambos sean int o float. Tambien que chequee que una variable int no pueda ser seteada con un string, lo mismo con un float.</b><br>
 <b>Poder declarar variables sin problemas realizando previamente un chequeo de palabras reservadas</b><br>
-<b>Implementar la funcion WRITE y READ</b><br>
-<b>Verificar que sólo las variables declaradas pueden ser utilizadas en el desarrollo</b><br>
 
 <h2>Tareas Hechas</h2>
 <strike>Crear y dumpear a un archivo la tabla de símbolos</strike><br>
@@ -17,6 +14,9 @@ Cumplir con la primer entrega del TP para el <b>Lunes 17-09-2018</b><br>
 <strike>Se añadio los comentarios</strike><br>
 <strike>Se valido la longitud de nombre de variables.</strike><br>
 <strike>Se implemento la declaracion multiple "cant, cont, x : int"</strike><br>
+<strike>Implementar la funcion WRITE y READ</strike><br>
 <b><strike>Se resolvio la carga de tipos en la elaboracion de la misma para las estructuras de declaracion multiple ya que no las carga.</b></strike>S<br>
+<strike>Validar tipos de datos, es decir que ambos sean int o float. Tambien que chequee que una variable int no pueda ser seteada con un string, lo mismo con un float.</strike><br>
+<strike>Verificar que sólo las variables declaradas pueden ser utilizadas en el desarrollo</strike><br>
 
 <strike>-Temas Especiales- Implementar la asignacion multiple y la funcion AVG (promedio)</strike><br>
