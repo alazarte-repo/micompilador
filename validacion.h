@@ -1,4 +1,8 @@
-void yyerror(char *msg){
+int contTipos = 0;
+char tipos[20][40];
+
+void yyerror(char *msg)
+{
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
@@ -9,7 +13,9 @@ int validarInt(char entero[]) {
     if(casteado < -32768 || casteado > 32767) {
         sprintf(msg, "ERROR: Entero %d fuera de rango. Debe estar entre [-32768; 32767]\n", casteado);
         yyerror(msg);
-    } else {
+    } else 
+	{
+		insertarTipo("int");
         return 0;
     }
 }
@@ -22,8 +28,9 @@ int validarFloat(char flotante[]) {
         sprintf(msg, "ERROR: Float %f fuera de rango. Debe estar entre [1.17549e-38; 3.40282e38]\n", casteado);
         yyerror(msg);
     } 
-    else {
-
+    else 
+	{
+		insertarTipo("float");
         return 0;
     }
 }
@@ -41,6 +48,7 @@ int validarString(char cadena[]) {
             sincomillas[i]=cadena[i+1];
     }
     sincomillas[i]='\0';
+	insertarTipo("string");
     return 0;
 }
 
@@ -80,14 +88,41 @@ void validarPalabraReservada(char *nombreToken)
     }
 }
 
-/* int resetTipos(){
-    contTipos = 0;
-    strcpy(tipos[contTipos],"null");
+int insertarTipo(char tipo[]) {
+    strcpy(tipos[contTipos],tipo);
+    strcpy(tipos[contTipos+1],"null");
+    contTipos++;
+    return 0;
 }
 
-int validarTipos(char tipo[]) {
-    char msg[100];
-    int i ;
+ int resetTipos()
+{
+	contTipos = 0;
+	strcpy(tipos[contTipos],"null");
+}
+
+int compararTipos(char *a, char *b){
+    char auxa[50];
+    char auxb[50];
+    strcpy(auxa,a);
+    strcpy(auxb,b);
+    downcase(auxa);
+    downcase(auxb);
+    printf("Comparando %s y %s\n",auxa,auxb);
+
+    if (strstr(auxa,auxb) != NULL){
+        return 0;
+    }
+    if (strstr(auxb,auxa) != NULL){
+        return 0;
+    }
+    return 1;
+}
+
+int validarTipos(char tipo[])
+{
+	char msg[100];
+	int i ;
     for(i=0; i< contTipos; i++){
         if(compararTipos(tipo,tipos[i])!=0){
             sprintf(msg, "ERROR: Tipos incompatibles\n");
@@ -96,6 +131,17 @@ int validarTipos(char tipo[]) {
     }
     resetTipos();
     return 0;
-} */
+} 
+
+void validarDefinicionVariable(char cadena[])
+{
+	
+	if(searchSymbol(cadena) == -1)
+	{
+		printf("\nVariable %s no declarada previamente. ", cadena);
+		system("pause");
+		exit(0);
+	}
+}
 
 //-----------------------Fin de funciones para validacion-----------------------//

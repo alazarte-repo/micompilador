@@ -61,7 +61,7 @@ asignacion:
 			;
 			
 formato_asignacion:
-                    expresion													{symbol id = getSymbol(yylval.s); asigIndice = crear_terceto___(":=", id.nombre, expIndice);printf("ASIGNACION SIMPLE\n");}
+                    expresion													{validarDefinicionVariable(yylval.s);symbol id = getSymbol(yylval.s); validarTipos(id.tipo);asigIndice = crear_terceto___(":=", id.nombre, expIndice);printf("ASIGNACION SIMPLE\n");}
 					|ID ASIG formato_asignacion									{printf("ASIGNACION MULTIPLE\n");}
 					;
 decision:
@@ -180,7 +180,8 @@ condicion:
             condIndice = expIndice;
             }
             expresion 
-            { 
+            {
+				validarTipos("float");
                 condMulIndice = crear_terceto__("CMP", condIndice, expIndice);
                 printf("\ncondicion : expresion op_comparacion expresion "); 
             }
@@ -225,19 +226,19 @@ formato_promedio:
 				|expresion COMA formato_promedio
 				;
 expresion:
-        expresion RESTA termino											    	{expIndice = crear_terceto__("-", expIndice, terIndice);printf("RESTA\n");}
-		|expresion SUMA termino													{expIndice = crear_terceto__("+", expIndice, terIndice);printf("SUMA\n");}
-		|termino																{expIndice = terIndice;printf("TERMINO\n");}
+        expresion RESTA termino											    	{validarTipos("float");expIndice = crear_terceto__("-", expIndice, terIndice);printf("RESTA\n");}
+		|expresion SUMA termino													{validarTipos("float");expIndice = crear_terceto__("+", expIndice, terIndice);printf("SUMA\n");}
+		|termino																{validarTipos("float");expIndice = terIndice;printf("TERMINO\n");}
 		;									
 
 termino:
-        termino MUL factor														{terIndice = crear_terceto__("*", terIndice, facIndice);printf("MULTIPLICACION\n");}
-		|termino DIV factor														{terIndice = crear_terceto__("/", terIndice, facIndice);printf("DIVISION\n");}
-		|factor																	{terIndice = facIndice;printf("FACTOR\n");}
+        termino MUL factor														{validarTipos("float");terIndice = crear_terceto__("*", terIndice, facIndice);printf("MULTIPLICACION\n");}
+		|termino DIV factor														{validarTipos("float");terIndice = crear_terceto__("/", terIndice, facIndice);printf("DIVISION\n");}
+		|factor																	{validarTipos("float");terIndice = facIndice;printf("FACTOR\n");}
 		;									
 
 factor:
-        ID																		{symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
+        ID																		{symbol id = getSymbol(yylval.s);insertarTipo(id.tipo);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
 		|tipo																	{printf("CTE\n");}
 		|P_A expresion P_C														{printf("EXPRESION\n");}
 		;									
