@@ -45,7 +45,7 @@ programa:
         sentencias																{printf("COMPILACION OK\n");}
 		;								
 sentencias:
-            sentencias sent													{printf("GRUPO DE SENTENCIAS\n");}
+            sentencias sent														{printf("GRUPO DE SENTENCIAS\n");}
 			|sent																{printf("SENTENCIA INDIVIDUAL\n");}
 			;								
 sent:
@@ -107,8 +107,27 @@ tipo_dato:
 		;			
 		
 iteracion:
-            WHILE P_A condiciones P_C LL_A sentencias LL_C						{printf("WHILE\n");}
-            ;						
+            WHILE P_A   
+                {
+                 apilar(nroTerceto+1);
+                }
+                condiciones P_C LL_A sentencias LL_C	
+                {            
+                    crear_terceto_("JI"); /*aca habria que desapilar para saber donde empezo la condicion para volver a ejecutarla*/
+                    modificarSalto(nroTerceto + 1,desapilar());//terceto de la condicion ante un falso
+                    auxDesapilar = desapilar();
+                    if(auxDesapilar == -1)
+                    {
+                        modificarSalto(nroTerceto + 1, desapilar());
+                    }
+                    else
+                    {
+                        apilar(auxDesapilar);
+                    }
+                    modificarSalto(desapilar(), nroTerceto); //salto incondicional al inicio del while
+                    printf("WHILE\n");
+                }
+            ;							
 
 condiciones: 
             condicion 
