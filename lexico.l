@@ -68,6 +68,9 @@ if				{return IF;}
 else			{return ELSE;}
 while			{return WHILE;}
 
+WRITE			{return WRITE;}
+READ			{return READ;}
+
 AVG				{return AVG;}
 
 %%

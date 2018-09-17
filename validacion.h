@@ -124,10 +124,10 @@ int validarTipos(char tipo[])
 	char msg[100];
 	int i ;
     for(i=0; i< contTipos; i++){
-        if(compararTipos(tipo,tipos[i])!=0){
+        /* if(compararTipos(tipo,tipos[i])!=0){
             sprintf(msg, "ERROR: Tipos incompatibles\n");
             yyerror(msg);
-        }
+        } */
     }
     resetTipos();
     return 0;

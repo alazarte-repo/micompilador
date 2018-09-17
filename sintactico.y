@@ -29,23 +29,24 @@ char *yytext;
 
 %token AND OR
 
-%token IF ELSE WHILE AVG
+%token IF ELSE WHILE AVG WRITE READ
 
 %%
 raiz:
     programa	{
-	printf("Generando Tabla de Simbolos\n");
+	printf("Generando Tabla de Simbolos...\n");
 	symbolTableToHtml(symbolTable,"ts.html");
-	printf("Generando GCI\n");
-	generarIntermedia();
+	//printf("Generando GCI\n");
+	//generarIntermedia();
+    {printf("->COMPILACION OK<-\n");}
 	}
 	;
 
 programa:
-        sentencias																{printf("COMPILACION OK\n");}
-		;								
+		sentencias
+		;
 sentencias:
-            sentencias sent														{printf("GRUPO DE SENTENCIAS\n");}
+			sentencias sent														{printf("GRUPO DE SENTENCIAS\n");}
 			|sent																{printf("SENTENCIA INDIVIDUAL\n");}
 			;								
 sent:
@@ -54,14 +55,16 @@ sent:
 	|declaracion																{printf("DECLARACION\n");}
 	|iteracion																	{printf("ITERA\n");}
 	|promedio																	{printf("AVG\n");}
+	|entrada_salida																{printf("ENTRADA O SALIDA POR TECLADO\n");}
 	;
 
+	
 asignacion:
-            ID ASIG formato_asignacion 
+			ID ASIG formato_asignacion 
 			;
 			
 formato_asignacion:
-                    expresion													{validarDefinicionVariable(yylval.s);symbol id = getSymbol(yylval.s); validarTipos(id.tipo);asigIndice = crear_terceto___(":=", id.nombre, expIndice);printf("ASIGNACION SIMPLE\n");}
+					expresion													{validarDefinicionVariable(yylval.s);symbol id = getSymbol(yylval.s); validarTipos(id.tipo);asigIndice = crear_terceto___(":=", id.nombre, expIndice);printf("ASIGNACION SIMPLE\n");}
 					|ID ASIG formato_asignacion									{printf("ASIGNACION MULTIPLE\n");}
 					;
 decision:
@@ -90,100 +93,90 @@ decision:
 		;
 		
 declaracion:
-            DEFVAR declaraciones ENDDEF										{saveIdType();printf("BLOQUE DECLARACION\n");}
+			DEFVAR declaraciones ENDDEF											{saveIdType();printf("BLOQUE DECLARACION\n");}
 			;	
 declaraciones:
-                declaraciones formato_declaracion
+			declaraciones formato_declaracion
 				|formato_declaracion
 				;
 formato_declaracion:
-                    ID DP tipo_dato											{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
+			ID DP tipo_dato												{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
 					|ID COMA formato_declaracion								{validarLongitudId($1);symbol idTipo = getSymbol(yylval.s);saveId($1);saveType(idTipo.tipo);printf("DECLARACION MULTIPLE\n");}
 					;
 tipo_dato:
-        INT																	{saveType("int");printf("INT\n");}
+        INT																		{saveType("int");printf("INT\n");}
 		|FLOAT																	{saveType("float");printf("FLOAT\n");}
 		|STRING																	{saveType("string");printf("STRING\n");}
 		;			
 		
 iteracion:
-            WHILE P_A   
-                {
-                 apilar(nroTerceto+1);
-                }
-                condiciones P_C LL_A sentencias LL_C	
-                {            
-                    crear_terceto_("JI"); /*aca habria que desapilar para saber donde empezo la condicion para volver a ejecutarla*/
-                    modificarSalto(nroTerceto + 1,desapilar());//terceto de la condicion ante un falso
-                    auxDesapilar = desapilar();
-                    if(auxDesapilar == -1)
-                    {
-                        modificarSalto(nroTerceto + 1, desapilar());
-                    }
-                    else
-                    {
-                        apilar(auxDesapilar);
-                    }
-                    modificarSalto(desapilar(), nroTerceto); //salto incondicional al inicio del while
-                    printf("WHILE\n");
-                }
-            ;							
+			WHILE P_A   
+				{
+				 apilar(nroTerceto+1);
+				}
+				condiciones P_C LL_A sentencias LL_C	
+				{
+					crear_terceto_("JI"); /*aca habria que desapilar para saber donde empezo la condicion para volver a ejecutarla*/
+					modificarSalto(nroTerceto + 1,desapilar());//terceto de la condicion ante un falso
+					auxDesapilar = desapilar();
+					if(auxDesapilar == -1)
+					{
+					    modificarSalto(nroTerceto + 1, desapilar());
+					}
+					else
+					{
+					    apilar(auxDesapilar);
+					}
+					modificarSalto(desapilar(), nroTerceto); //salto incondicional al inicio del while
+					printf("WHILE\n");
+				}
+			;
 
 condiciones: 
             condicion 
                 { 				
                 condMulIndice = crear_terceto__(obtenerSalto(1), condMulIndice, nroTerceto);
-                //si aca, dps de genera el terceto apilamos numero de terceto, tenemos el de la condicion que hay que modificar mas adelante
                 apilar(nroTerceto);
-                printf("\ncondiciones : condicion"); 
                 }
             |condicion AND 
                 {							
                 crear_terceto__(obtenerSalto(1), condMulIndice, nroTerceto); //salto si es falso
                 apilar(nroTerceto);
                 apilar(-1); //para indicar que hubo and y tenemos que desapilar dos veces en algunos casos
-                //si aca, dps de genera el terceto apilamos numero de terceto, tenemos el de la condicion que hay que modificar mas adelante
                 }
             condicion 					
                 { 				
                 crear_terceto__(obtenerSalto(1), condMulIndice, nroTerceto); //salto si es falso
                 apilar(nroTerceto);
-                //si aca, dps de genera el terceto apilamos numero de terceto, tenemos el de la condicion que hay que modificar mas adelante
-                printf("\ncondiciones : condicion OP_AND condicion"); 
                 }
             |condicion OR 
                 {								
                 crear_terceto__(obtenerSalto(0), condMulIndice, nroTerceto); //salto si es verdadero
                 apilar(nroTerceto);
-                //si aca, dps de genera el terceto apilamos numero de terceto, tenemos el de la condicion que hay que modificar mas adelante
                 }
             condicion 
                 { 
                 crear_terceto__(obtenerSalto(1), condMulIndice, nroTerceto); //salto si es falso
                 modificarSalto(nroTerceto + 1, desapilar());
                 apilar(nroTerceto);
-                //si aca, dps de genera el terceto apilamos numero de terceto, tenemos el de la condicion que hay que modificar mas adelante
-                printf("\ncondiciones : condicion OP_OR condicion"); 
                 }
             |PA_A condicion P_C
                 { 
                 condMulIndice = crear_terceto__(obtenerSalto(0), condMulIndice, nroTerceto);
                 apilar(nroTerceto);
-                //si aca, dps de genera el terceto apilamos numero de terceto, tenemos el de la condicion que hay que modificar mas adelante
-                printf("\ncondiciones : OP_NOT condicion");
                 }
             ;								
 
 condicion: 
             expresion operador_comparacion
             {
-            condIndice = expIndice;
+				condIndice = expIndice;
             }
             expresion 
             {
 				validarTipos("float");
                 condMulIndice = crear_terceto__("CMP", condIndice, expIndice);
-                printf("\ncondicion : expresion op_comparacion expresion "); 
+                printf("\nCONDICION"); 
             }
             ;
 
@@ -191,31 +184,31 @@ operador_comparacion:
                     IGUAL 
                     { 
                         operacionLogica = IGUAL;
-                        printf("\nop_comparacion : OP_IGUAL"); 
+                        printf("\nComparador: IGUAL\n"); 
                     }| 
                     MENOR 
                     { 
                         operacionLogica = MENOR;
-                        printf("\nop_comparacion : MENOR"); 
+                        printf("\nComparador: MENOR\n"); 
                     }| 
                     MAYOR 
                     { 
                         operacionLogica = MAYOR;
-                        printf("\nop_comparacion : MAYOR"); 
+                        printf("\nComparador: MAYOR\n"); 
                     }| MAYOR_IGUAL
                     { 
                         operacionLogica = MAYOR_IGUAL;
-                        printf("\nop_comparacion : MAYOR_IGUAL"); 
+                        printf("\nComparador: MAYOR_IGUAL\n"); 
                     }| 
                     MENOR_IGUAL
                     { 
                         operacionLogica = MENOR_IGUAL;
-                        printf("\nop_comparacion : MENOR_IGUAL"); 
+                        printf("\nComparador: MENOR_IGUAL\n"); 
                     }| 
                     DISTINTO 
                     { 
                         operacionLogica = DISTINTO;
-                        printf("\nop_comparacion : DISTINTO "); 
+                        printf("\nComparador: DISTINTO\n"); 
                     } ;								
 
 promedio:
@@ -225,6 +218,12 @@ formato_promedio:
                 expresion
 				|expresion COMA formato_promedio
 				;
+				
+entrada_salida:
+				READ ID                                                         {printf("READ\n");}
+                |WRITE ID                                                       {printf("WRITE\n");}
+                
+				
 expresion:
         expresion RESTA termino											    	{validarTipos("float");expIndice = crear_terceto__("-", expIndice, terIndice);printf("RESTA\n");}
 		|expresion SUMA termino													{validarTipos("float");expIndice = crear_terceto__("+", expIndice, terIndice);printf("SUMA\n");}
