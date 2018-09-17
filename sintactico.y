@@ -34,12 +34,12 @@ char *yytext;
 %%
 raiz:
     programa	{
-	printf("Generando Tabla de Simbolos...\n");
-	symbolTableToHtml(symbolTable,"ts.html");
-	//printf("Generando GCI\n");
-	//generarIntermedia();
-    {printf("->COMPILACION OK<-\n");}
-	}
+				printf("Generando Tabla de Simbolos...\n");
+				symbolTableToHtml(symbolTable,"ts.html");
+				printf("Generando GCI\n");
+				generarIntermedia();
+				printf("->COMPILACION OK<-\n");
+				}
 	;
 
 programa:
@@ -77,8 +77,7 @@ decision:
 																					apilar(auxDesapilar);
 																				printf("IF\n");
 																				}
-		|IF P_A condiciones P_C LL_A sentencias LL_C ELSE
-																				{
+		|IF P_A condiciones P_C LL_A sentencias LL_C ELSE						{
 																				crear_terceto_("JI");
 																				modificarSalto(nroTerceto + 1, desapilar());				
 																				auxDesapilar = desapilar();
@@ -100,7 +99,7 @@ declaraciones:
 				|formato_declaracion
 				;
 formato_declaracion:
-			ID DP tipo_dato												{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
+					ID DP tipo_dato												{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
 					|ID COMA formato_declaracion								{validarLongitudId($1);symbol idTipo = getSymbol(yylval.s);saveId($1);saveType(idTipo.tipo);printf("DECLARACION MULTIPLE\n");}
 					;
 tipo_dato:
@@ -239,7 +238,7 @@ termino:
 factor:
         ID																		{symbol id = getSymbol(yylval.s);insertarTipo(id.tipo);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
 		|tipo																	{printf("CTE\n");}
-		|P_A expresion P_C														{printf("EXPRESION\n");}
+		|P_A expresion P_C														{printf("(EXPRESION)\n");}
 		;									
 
 tipo:
