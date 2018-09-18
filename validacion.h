@@ -80,11 +80,14 @@ void validarPalabraReservada(char *nombreToken)
 		marca = true;
 	if(strcmp (nombreToken, "avg") == 0)
 		marca = true;
+	if(strcmp (nombreToken, "DEFVAR") == 0)
+		marca = true;
+	if(strcmp (nombreToken, "ENDDEF") == 0)
+		marca = true;
 
 	if(marca){
-		char *msg;
-		sprintf(msg, "ERROR: Id de variable %s es una palabra reservada del lenguaje.\n", nombreToken);
-		yyerror(msg);
+		printf("ERROR: Id de variable %s es una palabra reservada del lenguaje.\n", nombreToken);
+		exit(0);
     }
 }
 

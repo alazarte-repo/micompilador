@@ -83,15 +83,24 @@ symbol getSymbol(char nombre[]){
 /* Funciones para que finalizado el bloque de declaracion se cargue la tabla de símbolos en la estructura de datos creada */
 //Guardar ID en la estructura
 void saveId (char *id) {
-    strcpy(varTypeArray[0][idPos++],id);
+	int i;
+	//Realiza el control de que la variable a agregar en la TS no haya sido ya declarada anteriormente
+	 for(i=0; i < idPos; i++ ) {
+		if(strcmp(varTypeArray[0][i],id)==0)
+		{
+			printf("ERROR: El Id de variable %s ya se encuentra declarada.\n", id);
+			exit(0);
+		}
+    }
+	strcpy(varTypeArray[0][idPos++],id);
 }
 //Guardar el tipo en la estructura
 void saveType (char *type){
     strcpy(varTypeArray[1][typePos++],type);
 }
+
 //Guardar en el vector
 void saveIdType() {
-    printf("Guardando data en tabla de simbolos\n");
     int i;
     for(i=0; i < idPos; i++ ) {
 		if(!(*varTypeArray[1][i])){

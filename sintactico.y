@@ -95,11 +95,11 @@ declaracion:
 			DEFVAR declaraciones ENDDEF											{saveIdType();printf("BLOQUE DECLARACION\n");}
 			;	
 declaraciones:
-			declaraciones formato_declaracion
+				declaraciones formato_declaracion
 				|formato_declaracion
 				;
 formato_declaracion:
-					ID DP tipo_dato												{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
+					ID {validarPalabraReservada(yylval.s);}	DP tipo_dato		{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
 					|ID COMA formato_declaracion								{validarLongitudId($1);symbol idTipo = getSymbol(yylval.s);saveId($1);saveType(idTipo.tipo);printf("DECLARACION MULTIPLE\n");}
 					;
 tipo_dato:
@@ -208,7 +208,8 @@ operador_comparacion:
                     { 
                         operacionLogica = DISTINTO;
                         printf("\nComparador: DISTINTO\n"); 
-                    } ;								
+                    } 
+				;								
 
 promedio:
         AVG P_A PA_A formato_promedio PA_C P_C									{printf("FUNCION PROMEDIO (AVG)\n");}
@@ -221,7 +222,7 @@ formato_promedio:
 entrada_salida:
 				READ ID                                                         {printf("READ\n");}
                 |WRITE ID                                                       {printf("WRITE\n");}
-                
+                ;
 				
 expresion:
         expresion RESTA termino											    	{validarTipos("float");expIndice = crear_terceto__("-", expIndice, terIndice);printf("RESTA\n");}
@@ -238,11 +239,17 @@ termino:
 factor:
         ID																		{symbol id = getSymbol(yylval.s);insertarTipo(id.tipo);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
 		|tipo																	{printf("CTE\n");}
-		|P_A expresion P_C														{printf("(EXPRESION)\n");}
+		|P_A {terAuxIndice = terIndice; expAuxIndice = expIndice;} expresion P_C
+			{ 
+				facIndice = expIndice;
+				terIndice = terAuxIndice;
+				expIndice = expAuxIndice;
+				printf("(EXPRESION)\n");
+			} 
 		;									
 
 tipo:
-    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.valor);printf("ENTERO\n");}   
+    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(id.valor,id.tipo,yytext);facIndice = crear_terceto_(id.valor);}   
 	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.valor);printf("FLOAT\n");}
 	|CADENA																		{validarString(yytext);printf("CADENA\n");}
 	;
