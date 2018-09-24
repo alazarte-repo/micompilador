@@ -60,7 +60,7 @@ sent:
 
 	
 asignacion:
-			ID ASIG formato_asignacion 
+			ID ASIG formato_asignacion
 			;
 			
 formato_asignacion:
@@ -99,7 +99,7 @@ declaraciones:
 				|formato_declaracion
 				;
 formato_declaracion:
-					ID {validarPalabraReservada(yylval.s);}	DP tipo_dato		{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
+					ID {validarLongitudId(yylval.s);validarPalabraReservada(yylval.s);saveId(yylval.s);}	DP tipo_dato		{printf("DECLARACION SIMPLE\n");}
 					|ID COMA formato_declaracion								{validarLongitudId($1);symbol idTipo = getSymbol(yylval.s);saveId($1);saveType(idTipo.tipo);printf("DECLARACION MULTIPLE\n");}
 					;
 tipo_dato:
@@ -237,7 +237,7 @@ termino:
 		;									
 
 factor:
-        ID																		{symbol id = getSymbol(yylval.s);insertarTipo(id.tipo);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
+        ID																		{printf("ID\n");}
 		|tipo																	{printf("CTE\n");}
 		|P_A {terAuxIndice = terIndice; expAuxIndice = expIndice;} expresion P_C
 			{ 
@@ -249,9 +249,9 @@ factor:
 		;									
 
 tipo:
-    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(id.valor,id.tipo,yytext);facIndice = crear_terceto_(id.valor);}   
-	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.valor);printf("FLOAT\n");}
-	|CADENA																		{validarString(yytext);printf("CADENA\n");}
+    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(yylval.s,id.tipo,yytext);facIndice = crear_terceto_(yytext);printf("INT\n");}   
+	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(yytext);printf("FLOAT\n");}
+	|CADENA																		{validarString(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(yytext);printf("CADENA\n");}
 	;
 
 %%

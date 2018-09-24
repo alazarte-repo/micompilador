@@ -11,7 +11,7 @@
 
 DIGITO			[0-9]
 LETRA			[a-zA-Z]
-ID				{LETRA}{DIGITO}({LETRA}|{DIGITO})*
+ID				{LETRA}{DIGITO}({LETRA}|{DIGITO}|_)*
 
 ENTERO			-?{DIGITO}+
 REAL			-?{DIGITO}*"."{DIGITO}*|0
@@ -23,7 +23,7 @@ CONTENIDO		[a-zA-Z0-9 ]*
 COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}		
 %%
 {COMENTARIO} 	{;}
-{ID}			{strcpy(yylval.s, yytext);return ID;}
+{ID}			{strcpy(yylval.s,yytext);return ID;}
 
 ">"				{return MAYOR;}
 ">="			{return MAYOR_IGUAL;}
