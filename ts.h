@@ -49,6 +49,12 @@ int searchSymbol(char key[]){
     return -1;
 }
 
+symbol getSymbol(char nombre[]){
+    int pos = searchSymbol(nombre);
+    if(pos >= 0) return symbolTable[pos];
+    return nullSymbol;
+}
+
 int saveSymbol(char nombre[], char tipo[], char valor[] ){
     char mynombre[100];
     char type[10];
@@ -71,13 +77,8 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
     newSymbol.longitud = strlen(nombre);
     symbolTable[use_pos] = newSymbol;
     newSymbol = nullSymbol;
+	
     return 0;
-}
-
-symbol getSymbol(char nombre[]){
-    int pos = searchSymbol(nombre);
-    if(pos >= 0) return symbolTable[pos];
-    return nullSymbol;
 }
 
 /* Funciones para que finalizado el bloque de declaracion se cargue la tabla de símbolos en la estructura de datos creada */

@@ -43,8 +43,8 @@ COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}
 
 "("				{return P_A;}	
 ")"				{return P_C;}
-"["				{return PA_A;}
-"]"				{return PA_C;}
+"["				{return C_A;}
+"]"				{return C_C;}
 "{"				{return LL_A;}	
 "}"				{return LL_C;}
 
@@ -55,9 +55,9 @@ COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}
 DEFVAR			{return DEFVAR;}
 ENDDEF			{return ENDDEF;}
 
-{ENTERO}		{return ENTERO;}
-{REAL}			{return REAL;}
-{CADENA}		{return CADENA;}
+{ENTERO}		{strcpy(yylval.s,yytext);return ENTERO;}
+{REAL}			{strcpy(yylval.s,yytext);return REAL;}
+{CADENA}		{strcpy(yylval.s,yytext);return CADENA;}
 
 int				{return INT;}
 float			{return FLOAT;}

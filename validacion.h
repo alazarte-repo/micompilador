@@ -142,7 +142,6 @@ int validarTipos(char tipo[])
 
 void validarDefinicionVariable(char cadena[])
 {
-	
 	if(searchSymbol(cadena) == -1)
 	{
 		printf("\nVariable %s no declarada previamente. ", cadena);

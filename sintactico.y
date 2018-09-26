@@ -23,7 +23,7 @@ char *yytext;
 %token <s>ID
 %token MAYOR MAYOR_IGUAL MENOR MENOR_IGUAL IGUAL DISTINTO   
 %token ASIG SUMA RESTA MUL DIV
-%token P_A P_C LL_A LL_C PA_A PA_C P_Y_C DP COMA
+%token P_A P_C LL_A LL_C C_A C_C P_Y_C DP COMA
 
 %token ENTERO REAL CADENA INT FLOAT STRING
 
@@ -159,7 +159,7 @@ condiciones:
                 modificarSalto(nroTerceto + 1, desapilar());
                 apilar(nroTerceto);
                 }
-            |PA_A condicion P_C
+            |C_A condicion P_C
                 { 
                 condMulIndice = crear_terceto__(obtenerSalto(0), condMulIndice, nroTerceto);
                 apilar(nroTerceto);
@@ -212,12 +212,26 @@ operador_comparacion:
 				;								
 
 promedio:
-        AVG P_A PA_A formato_promedio PA_C P_C									{printf("FUNCION PROMEDIO (AVG)\n");}
+        AVG P_A C_A formato_promedio C_C P_C									{printf("FUNCION PROMEDIO (AVG) - RESULTADO: %.2f\n",(cantAVG/contAVG));}
 		;
 formato_promedio:
-                expresion
-				|expresion COMA formato_promedio
+                tipo_dato_promedio
+					{
+					cantAVG+=atof(yylval.s);
+					contAVG++;
+					//printf("yytext:%s yyval.s:%s cantAVG:%f contAVG:%d\n",yytext,yylval.s,cantAVG,contAVG);
+					}
+				|tipo_dato_promedio
+					{
+					cantAVG+=atof(yylval.s);
+					contAVG++;
+					//printf("yytext:%s yyval.s:%s cantAVG:%f contAVG:%d\n",yytext,yylval.s,cantAVG,contAVG);
+					}  COMA formato_promedio
 				;
+tipo_dato_promedio:
+					ENTERO														{validarInt(yytext);printf("AVG-INT\n");}   
+					|REAL														{validarFloat(yytext);printf("AVG-FLOAT\n");}
+					;
 				
 entrada_salida:
 				READ ID                                                         {printf("READ\n");}
