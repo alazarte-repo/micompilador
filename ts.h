@@ -56,29 +56,40 @@ symbol getSymbol(char nombre[]){
 }
 
 int saveSymbol(char nombre[], char tipo[], char valor[] ){
-    char mynombre[100];
-    char type[10];
-    strcpy(type,tipo);
-    strcpy(mynombre,nombre);
-    downcase(type);
-    int use_pos = searchSymbol(nombre);
-    if ( use_pos == -1){
-        use_pos = pos_st;
-        pos_st++;
-    }
-    symbol newSymbol;
-    strcpy(newSymbol.nombre, prefix_(downcase(mynombre)));
-    strcpy(newSymbol.tipo, type);
-    if (valor == NULL){
-        strcpy(newSymbol.valor, nombre);
-    } else {
-        strcpy(newSymbol.valor, valor);
-    }
-    newSymbol.longitud = strlen(nombre);
-    symbolTable[use_pos] = newSymbol;
-    newSymbol = nullSymbol;
-	
-    return 0;
+	int indice = searchSymbol(nombre);
+	printf("nombre:%s indice:%d\n",nombre,indice);
+    if( indice == -1)
+	{
+		printf("Variable nueva\n");
+		char mynombre[100];
+		char type[10];
+		strcpy(type,tipo);
+		strcpy(mynombre,nombre);
+		downcase(type);
+		int use_pos = searchSymbol(nombre);
+		if ( use_pos == -1){
+			use_pos = pos_st;
+			pos_st++;
+		}
+		symbol newSymbol;
+		strcpy(newSymbol.nombre, prefix_(downcase(mynombre)));
+		strcpy(newSymbol.tipo, type);
+		if (valor == NULL){
+			strcpy(newSymbol.valor, nombre);
+		} else {
+			strcpy(newSymbol.valor, valor);
+		}
+		newSymbol.longitud = strlen(nombre);
+		symbolTable[use_pos] = newSymbol;
+		newSymbol = nullSymbol;
+		
+		return 0;
+	}
+	else
+	{
+		printf("La variable ya fue encontrada\n");
+		strcpy(symbolTable[indice].valor,valor);
+	}
 }
 
 /* Funciones para que finalizado el bloque de declaracion se cargue la tabla de símbolos en la estructura de datos creada */
