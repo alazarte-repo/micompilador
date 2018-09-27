@@ -8,6 +8,9 @@
 //Funcion AVG
 int contAVG = 0;
 float cantAVG = 0;
+//Asignacion Multiple
+char *asigMul[100];
+int contAsig = 0;
 
 int nroTerceto = 0; 
 int asigIndice = 0, expIndice = 0, terIndice = 0, facIndice = 0, condIndice = 0, condMulIndice = 0;

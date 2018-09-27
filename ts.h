@@ -57,10 +57,9 @@ symbol getSymbol(char nombre[]){
 
 int saveSymbol(char nombre[], char tipo[], char valor[] ){
 	int indice = searchSymbol(nombre);
-	printf("nombre:%s indice:%d\n",nombre,indice);
     if( indice == -1)
 	{
-		printf("Variable nueva\n");
+		//printf("Variable nueva\n");
 		char mynombre[100];
 		char type[10];
 		strcpy(type,tipo);
@@ -87,10 +86,23 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
 	}
 	else
 	{
-		printf("La variable ya fue encontrada\n");
+		//printf("La variable ya fue encontrada\n");
 		strcpy(symbolTable[indice].valor,valor);
 	}
 }
+
+void asigMultiple(char valor[]){
+	
+	int i;
+    for ( i = 0;  i < pos_st ; i++) {
+        if(strcmp(symbolTable[i].valor, "@" ) == 0){
+            strcpy(symbolTable[i].valor, valor);
+        }
+    }
+pos_st--;
+}
+
+
 
 /* Funciones para que finalizado el bloque de declaracion se cargue la tabla de símbolos en la estructura de datos creada */
 //Guardar ID en la estructura

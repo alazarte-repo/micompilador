@@ -11,7 +11,7 @@
 
 DIGITO			[0-9]
 LETRA			[a-zA-Z]
-ID				{LETRA}{DIGITO}({LETRA}|{DIGITO}|_)*
+ID				{LETRA}{DIGITO}({LETRA}|{DIGITO})*
 
 ENTERO			-?{DIGITO}+
 REAL			-?{DIGITO}*"."{DIGITO}*|0
@@ -23,7 +23,7 @@ CONTENIDO		[a-zA-Z0-9 ]*
 COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}		
 %%
 {COMENTARIO} 	{;}
-{ID}			{strcpy(yylval.s,yytext);return ID;}
+{ID}			{strcpy(yylval.s, yytext);return ID;}
 
 ">"				{return MAYOR;}
 ">="			{return MAYOR_IGUAL;}
@@ -55,9 +55,9 @@ COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}
 DEFVAR			{return DEFVAR;}
 ENDDEF			{return ENDDEF;}
 
-{ENTERO}		{strcpy(yylval.s,yytext);return ENTERO;}
-{REAL}			{strcpy(yylval.s,yytext);return REAL;}
-{CADENA}		{strcpy(yylval.s,yytext);return CADENA;}
+{ENTERO}		{return ENTERO;}
+{REAL}			{return REAL;}
+{CADENA}		{return CADENA;}
 
 int				{return INT;}
 float			{return FLOAT;}

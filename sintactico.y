@@ -17,6 +17,10 @@ char *yytext;
  char s[20];
 }
 
+%union{
+ char i[20];
+}
+
 %token DEFVAR
 %token ENDDEF
 
@@ -25,7 +29,7 @@ char *yytext;
 %token ASIG SUMA RESTA MUL DIV
 %token P_A P_C LL_A LL_C C_A C_C P_Y_C DP COMA
 
-%token ENTERO REAL CADENA INT FLOAT STRING
+%token <i>ENTERO REAL CADENA INT FLOAT STRING
 
 %token AND OR
 
@@ -60,12 +64,21 @@ sent:
 
 	
 asignacion:
-			ID ASIG formato_asignacion
+			ID ASIG formato_asignacion 
 			;
 			
 formato_asignacion:
-					expresion													{validarDefinicionVariable(yylval.s);symbol id = getSymbol(yylval.s); validarTipos(id.tipo);asigIndice = crear_terceto___(":=", id.nombre, expIndice);printf("ASIGNACION SIMPLE\n");}
-					|ID ASIG formato_asignacion									{printf("ASIGNACION MULTIPLE\n");}
+					expresion													{
+																				validarDefinicionVariable(yylval.s);
+																				symbol id = getSymbol(yylval.s);
+																				validarTipos(id.tipo);
+																				asigIndice = crear_terceto__(":=",expIndice,atof(id.valor));
+																				printf("ASIGNACION SIMPLE\n");
+																				}
+					|ID															{
+																				printf("ASIGNACION MULTIPLE\n");
+																				}
+					ASIG formato_asignacion									
 					;
 decision:
         IF P_A condiciones P_C LL_A sentencias LL_C				    			{
@@ -99,7 +112,7 @@ declaraciones:
 				|formato_declaracion
 				;
 formato_declaracion:
-					ID {validarLongitudId(yylval.s);validarPalabraReservada(yylval.s);saveId(yylval.s);}	DP tipo_dato		{printf("DECLARACION SIMPLE\n");}
+					ID {validarPalabraReservada(yylval.s);}	DP tipo_dato		{validarLongitudId(yylval.s);saveId(yylval.s);printf("DECLARACION SIMPLE\n");}
 					|ID COMA formato_declaracion								{validarLongitudId($1);symbol idTipo = getSymbol(yylval.s);saveId($1);saveType(idTipo.tipo);printf("DECLARACION MULTIPLE\n");}
 					;
 tipo_dato:
@@ -217,15 +230,15 @@ promedio:
 formato_promedio:
                 tipo_dato_promedio
 					{
-					cantAVG+=atof(yylval.s);
+					cantAVG+=atof(yylval.i);
 					contAVG++;
-					//printf("yytext:%s yyval.s:%s cantAVG:%f contAVG:%d\n",yytext,yylval.s,cantAVG,contAVG);
+					//printf("yytext:%s yyval.i:%s cantAVG:%f contAVG:%d\n",yytext,yylval.i,cantAVG,contAVG);
 					}
 				|tipo_dato_promedio
 					{
-					cantAVG+=atof(yylval.s);
+					cantAVG+=atof(yylval.i);
 					contAVG++;
-					//printf("yytext:%s yyval.s:%s cantAVG:%f contAVG:%d\n",yytext,yylval.s,cantAVG,contAVG);
+					//printf("yytext:%s yyval.i:%s cantAVG:%f contAVG:%d\n",yytext,yylval.i,cantAVG,contAVG);
 					}  COMA formato_promedio
 				;
 tipo_dato_promedio:
@@ -251,7 +264,7 @@ termino:
 		;									
 
 factor:
-        ID																		{printf("ID\n");}
+        ID																		{symbol id = getSymbol(yylval.s);insertarTipo(id.tipo);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
 		|tipo																	{printf("CTE\n");}
 		|P_A {terAuxIndice = terIndice; expAuxIndice = expIndice;} expresion P_C
 			{ 
@@ -263,9 +276,9 @@ factor:
 		;									
 
 tipo:
-    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(yylval.s,id.tipo,yytext);facIndice = crear_terceto_(yytext);printf("INT\n");}   
-	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(yytext);printf("FLOAT\n");}
-	|CADENA																		{validarString(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(yytext);printf("CADENA\n");}
+    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(id.valor,id.tipo,yytext);facIndice = crear_terceto_(id.valor);printf("INT--------> yytext:%s yylval.s:%s\n",yytext,yylval.s);}   
+	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.valor);printf("FLOAT\n");}
+	|CADENA																		{validarString(yytext);printf("CADENA\n");}
 	;
 
 %%

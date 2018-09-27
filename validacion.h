@@ -89,10 +89,6 @@ void validarPalabraReservada(char *nombreToken)
 		printf("ERROR: Id de variable %s es una palabra reservada del lenguaje.\n", nombreToken);
 		exit(0);
     }
-	else
-		{
-		printf("Exito, no es palabra reservada.\n");
-    }
 }
 
 int insertarTipo(char tipo[]) {
