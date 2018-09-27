@@ -75,10 +75,7 @@ formato_asignacion:
 																				asigIndice = crear_terceto__(":=",expIndice,atof(id.valor));
 																				printf("ASIGNACION SIMPLE\n");
 																				}
-					|ID															{
-																				printf("ASIGNACION MULTIPLE\n");
-																				}
-					ASIG formato_asignacion									
+					|ID	ASIG formato_asignacion 								{printf("ASIGNACION MULTIPLE\n");}
 					;
 decision:
         IF P_A condiciones P_C LL_A sentencias LL_C				    			{
@@ -276,7 +273,7 @@ factor:
 		;									
 
 tipo:
-    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(id.valor,id.tipo,yytext);facIndice = crear_terceto_(id.valor);printf("INT--------> yytext:%s yylval.s:%s\n",yytext,yylval.s);}   
+    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(id.valor,id.tipo,yytext);facIndice = crear_terceto_(id.nombre);}   
 	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.valor);printf("FLOAT\n");}
 	|CADENA																		{validarString(yytext);printf("CADENA\n");}
 	;

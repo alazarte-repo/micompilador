@@ -91,19 +91,6 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
 	}
 }
 
-void asigMultiple(char valor[]){
-	
-	int i;
-    for ( i = 0;  i < pos_st ; i++) {
-        if(strcmp(symbolTable[i].valor, "@" ) == 0){
-            strcpy(symbolTable[i].valor, valor);
-        }
-    }
-pos_st--;
-}
-
-
-
 /* Funciones para que finalizado el bloque de declaracion se cargue la tabla de símbolos en la estructura de datos creada */
 //Guardar ID en la estructura
 void saveId (char *id) {
