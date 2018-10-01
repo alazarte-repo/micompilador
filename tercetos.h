@@ -10,7 +10,7 @@ int contAVG = 0;
 float cantAVG = 0;
 int avgInd = 0;
 //Asignacion Multiple
-bool marcaAsig = 0;
+int marcaAsig = 0;
 
 int nroTerceto = 0; 
 int asigIndice = 0, expIndice = 0, terIndice = 0, facIndice = 0, condIndice = 0, condMulIndice = 0;
@@ -31,7 +31,6 @@ struct node {
 		char cuarto[30];
         struct node *next;
 } *p;
-
 
 //TERCETOS	
 char* obtenerSalto(int saltoPorFalso)
@@ -104,7 +103,6 @@ void append( int indice, char* primero, int segundo, int tercero, char* cuarto )
      }
   }
 
-
 int crear_terceto_(char *op)
 {
 	nroTerceto++;
@@ -159,7 +157,6 @@ void errorLexico(char* error)
 }
 
 //////////////////////LISTA
-
 /*THIS FUNCTION DELETES A NODE */
 void delnode(int indice)
 {
@@ -315,7 +312,6 @@ void  display(struct node *r)
 	intermedia=fopen("intermedia.txt","w+");
 display(p);
 }
-
   
 //THIS FUNCTION COUNTS THE NUMBER OF ELEMENTS IN THE LIST
 int count()
@@ -390,5 +386,3 @@ void modificarSalto(int tercero, int loc)
 	
     return;
 }FILE *yytfilep;
-
-

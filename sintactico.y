@@ -64,27 +64,25 @@ sent:
 
 	
 asignacion:
-			asignacion_multiple {asigIndice = crear_terceto(0,yytext);} expresion
+			ID ASIG expresion
+			{
+				//printf("yytext:%s yyval.i:%s $:%s\n",yytext,yylval.i,$1);
+				validarDefinicionVariable($1);
+				symbol id = getSymbol($1);
+				validarTipos(id.tipo);
+				asigIndice = crear_terceto___(":=",$1,expIndice);
+				printf("ASIGNACION SIMPLE\n");
+			}
+			|ID ASIG asignacion
+			{
+				//printf("@@@@yytext:%s yyval.i:%s $:%s\n",yytext,yylval.i,$1);
+				validarDefinicionVariable($1);
+				symbol id = getSymbol($1);
+				validarTipos(id.tipo);
+				asigIndice = crear_terceto___(":=",$1,expIndice);
+				printf("ASIGNACION MULTIPLE\n");
+			}
 			;
-			
-asignacion_multiple:
-					ID ASIG														{
-																				validarDefinicionVariable(yylval.s);
-																				symbol id = getSymbol(yylval.s);
-																				validarTipos(id.tipo);
-																				//asigIndice = crear_terceto_("@valor");
-																				asigIndice = crear_terceto___(":=",id.nombre,expIndice);
-																				printf("ASIGNACION SIMPLE\n");
-																				}
-					|asignacion_multiple ID ASIG								{
-																				validarDefinicionVariable(yylval.s);
-																				symbol id = getSymbol(yylval.s);
-																				validarTipos(id.tipo);
-																				asigIndice = crear_terceto___(":=",id.nombre,expIndice);
-																				printf("ASIGNACION MULTIPLE\n");
-																				}
-					;
-
 			
 decision:
         IF P_A condiciones P_C LL_A sentencias LL_C				    			{
@@ -237,9 +235,13 @@ promedio:
 																				avgInd = crear_terceto_(valor);
 																				crear_terceto___(":=","cantAVG",avgInd);
 																				
+																				int auxAvgInd = avgInd;
+																				
 																				sprintf(valor, "%d", contAVG);
 																				avgInd = crear_terceto_(valor);
 																				crear_terceto___(":=","contAVG",avgInd);
+																				
+																				crear_terceto__("/",auxAvgInd,avgInd);
 																				
 																				printf("FUNCION PROMEDIO (AVG) - RESULTADO: %.2f\n",(cantAVG/contAVG));
 																				}
@@ -271,19 +273,55 @@ entrada_salida:
                 ;
 				
 expresion:
-        expresion RESTA termino											    	{validarTipos("float");expIndice = crear_terceto__("-", expIndice, terIndice);printf("RESTA\n");}
-		|expresion SUMA termino													{validarTipos("float");expIndice = crear_terceto__("+", expIndice, terIndice);printf("SUMA\n");}
-		|termino																{validarTipos("float");expIndice = terIndice;printf("TERMINO\n");}
+        expresion RESTA termino											    	
+		{
+			validarTipos("float");
+			expIndice = crear_terceto__("-", expIndice, terIndice);
+			printf("RESTA\n");
+		}
+		|expresion SUMA termino
+		{
+			validarTipos("float");
+			expIndice = crear_terceto__("+", expIndice, terIndice);
+			printf("SUMA\n");
+		}
+		|termino																
+		{
+			//validarTipos("float");
+			expIndice = terIndice;
+			printf("TERMINO\n");
+		}
 		;									
 
 termino:
-        termino MUL factor														{validarTipos("float");terIndice = crear_terceto__("*", terIndice, facIndice);printf("MULTIPLICACION\n");}
-		|termino DIV factor														{validarTipos("float");terIndice = crear_terceto__("/", terIndice, facIndice);printf("DIVISION\n");}
-		|factor																	{validarTipos("float");terIndice = facIndice;printf("FACTOR\n");}
+        termino MUL factor														
+		{
+			validarTipos("float");
+			terIndice = crear_terceto__("*", terIndice, facIndice);
+			printf("MULTIPLICACION\n");
+		}
+		|termino DIV factor														
+		{
+			validarTipos("float");
+			terIndice = crear_terceto__("/", terIndice, facIndice);
+			printf("DIVISION\n");
+		}
+		|factor																	
+		{
+			//validarTipos("float");
+			terIndice = facIndice;
+			printf("FACTOR\n");
+		}
 		;									
 
 factor:
-        ID																		{symbol id = getSymbol(yylval.s);insertarTipo(id.tipo);facIndice = crear_terceto_(id.nombre);printf("ID\n");}
+        ID																		
+		{
+			symbol id = getSymbol(yylval.s);
+			insertarTipo(id.tipo);
+			facIndice = crear_terceto_(id.nombre);
+			printf("ID\n");
+		}
 		|tipo																	{printf("CTE\n");}
 		|P_A {terAuxIndice = terIndice; expAuxIndice = expIndice;} expresion P_C
 			{ 
@@ -295,8 +333,28 @@ factor:
 		;									
 
 tipo:
-    ENTERO																		{validarInt(yytext);symbol id = getSymbol(yylval.s);saveSymbol(id.valor,id.tipo,yytext);facIndice = crear_terceto_(id.nombre);}   
-	|REAL																		{validarFloat(yytext);symbol id = getSymbol(yylval.s);facIndice = crear_terceto_(id.valor);printf("FLOAT\n");}
+    ENTERO																		
+	{
+		validarInt(yytext);
+		/*
+		symbol id = getSymbol(yylval.s);
+		saveSymbol(id.valor,id.tipo,yytext);
+		facIndice = crear_terceto_(id.nombre);
+		*/
+		facIndice = crear_terceto_(yytext);
+		printf("INT\n");
+	}   
+	|REAL																		
+	{
+		validarFloat(yytext);
+		/*
+		symbol id = getSymbol(yylval.s);
+		saveSymbol(id.valor,id.tipo,yytext);
+		facIndice = crear_terceto_(id.valor);
+		*/
+		facIndice = crear_terceto_(yytext);
+		printf("FLOAT\n");
+	}
 	|CADENA																		{validarString(yytext);printf("CADENA\n");}
 	;
 
