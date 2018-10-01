@@ -8,9 +8,9 @@
 //Funcion AVG
 int contAVG = 0;
 float cantAVG = 0;
+int avgInd = 0;
 //Asignacion Multiple
-char *asigMul[100];
-int contAsig = 0;
+bool marcaAsig = 0;
 
 int nroTerceto = 0; 
 int asigIndice = 0, expIndice = 0, terIndice = 0, facIndice = 0, condIndice = 0, condMulIndice = 0;
@@ -108,8 +108,16 @@ void append( int indice, char* primero, int segundo, int tercero, char* cuarto )
 int crear_terceto_(char *op)
 {
 	nroTerceto++;
-	//fprintf(intermedia, "%d:(%s,_,_)\n", nroTerceto, op);
+	fprintf(intermedia, "%d:(%s,_,_)\n", nroTerceto, op);
 	append(nroTerceto, op, -1, -1, "");
+	return nroTerceto;
+}
+
+int crear_terceto(int indice, char *op)
+{
+	nroTerceto++;
+	fprintf(intermedia, "%d:(%s,_,_)\n", nroTerceto, op);
+	append(indice, op, -1, -1, "");
 	return nroTerceto;
 }
 

@@ -55,7 +55,7 @@ COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}
 DEFVAR			{return DEFVAR;}
 ENDDEF			{return ENDDEF;}
 
-{ENTERO}		{return ENTERO;}
+{ENTERO}		{strcpy(yylval.i, yytext);return ENTERO;}
 {REAL}			{return REAL;}
 {CADENA}		{return CADENA;}
 

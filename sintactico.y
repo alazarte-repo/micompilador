@@ -64,19 +64,28 @@ sent:
 
 	
 asignacion:
-			ID ASIG formato_asignacion 
+			asignacion_multiple {asigIndice = crear_terceto(0,yytext);} expresion
 			;
 			
-formato_asignacion:
-					expresion													{
+asignacion_multiple:
+					ID ASIG														{
 																				validarDefinicionVariable(yylval.s);
 																				symbol id = getSymbol(yylval.s);
 																				validarTipos(id.tipo);
-																				asigIndice = crear_terceto__(":=",expIndice,atof(id.valor));
+																				//asigIndice = crear_terceto_("@valor");
+																				asigIndice = crear_terceto___(":=",id.nombre,expIndice);
 																				printf("ASIGNACION SIMPLE\n");
 																				}
-					|ID	ASIG formato_asignacion 								{printf("ASIGNACION MULTIPLE\n");}
+					|asignacion_multiple ID ASIG								{
+																				validarDefinicionVariable(yylval.s);
+																				symbol id = getSymbol(yylval.s);
+																				validarTipos(id.tipo);
+																				asigIndice = crear_terceto___(":=",id.nombre,expIndice);
+																				printf("ASIGNACION MULTIPLE\n");
+																				}
 					;
+
+			
 decision:
         IF P_A condiciones P_C LL_A sentencias LL_C				    			{
 																				modificarSalto(nroTerceto + 1, desapilar());
@@ -222,8 +231,20 @@ operador_comparacion:
 				;								
 
 promedio:
-        AVG P_A C_A formato_promedio C_C P_C									{printf("FUNCION PROMEDIO (AVG) - RESULTADO: %.2f\n",(cantAVG/contAVG));}
+        AVG P_A C_A formato_promedio C_C P_C									{
+																				char * valor;
+																				sprintf(valor, "%.2f", cantAVG);
+																				avgInd = crear_terceto_(valor);
+																				crear_terceto___(":=","cantAVG",avgInd);
+																				
+																				sprintf(valor, "%d", contAVG);
+																				avgInd = crear_terceto_(valor);
+																				crear_terceto___(":=","contAVG",avgInd);
+																				
+																				printf("FUNCION PROMEDIO (AVG) - RESULTADO: %.2f\n",(cantAVG/contAVG));
+																				}
 		;
+		
 formato_promedio:
                 tipo_dato_promedio
 					{
@@ -235,9 +256,10 @@ formato_promedio:
 					{
 					cantAVG+=atof(yylval.i);
 					contAVG++;
-					//printf("yytext:%s yyval.i:%s cantAVG:%f contAVG:%d\n",yytext,yylval.i,cantAVG,contAVG);
+					//printf("-yytext:%s yyval.i:%s cantAVG:%f contAVG:%d\n",yytext,yylval.i,cantAVG,contAVG);
 					}  COMA formato_promedio
 				;
+				
 tipo_dato_promedio:
 					ENTERO														{validarInt(yytext);printf("AVG-INT\n");}   
 					|REAL														{validarFloat(yytext);printf("AVG-FLOAT\n");}
